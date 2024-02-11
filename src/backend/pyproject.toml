@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "data_router"
+version = "0.1.0"
+description = ""
+authors = ["Navneet Raju <navneetr@usc.edu>", "Shalini Sai Prasad <saiprasa@usc.edu>", "Nammi Sridhara <knsridha@usc.edu>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.2"
+uvicorn = "^0.27.1"
+loguru = "^0.7.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
