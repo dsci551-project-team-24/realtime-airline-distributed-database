@@ -1,0 +1,19 @@
+# Use root/example as user/password credentials
+version: '3.1'
+name: realtime-airline-distributed-database
+services:
+  test_container:
+    image: ubuntu:20.04
+    command: tail -f /dev/null
+  db:
+    image: custom_mysql
+    restart: always
+    environment:
+      MYSQL_PASSWORD: dsci551
+      # Localhost configuration for now
+      ZOOKEEPER_SERVERS: "host.docker.internal"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      mode: replicated
+      replicas: 3

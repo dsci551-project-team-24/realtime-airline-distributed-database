@@ -98,6 +98,27 @@ files = [
 ]
 
 [[package]]
+name = "kazoo"
+version = "2.10.0"
+description = "\"Higher Level Zookeeper Client\""
+optional = false
+python-versions = "*"
+files = [
+    {file = "kazoo-2.10.0-py2.py3-none-any.whl", hash = "sha256:de2d69168de432ff66b457a26c727a5bf7ff53af5806653fd1df7f04b6a5483c"},
+    {file = "kazoo-2.10.0.tar.gz", hash = "sha256:905796ae4f4c12bd4e4ae92e6e5d018439e6b56c8cfbb24825362e79b230dab1"},
+]
+
+[package.extras]
+alldeps = ["Sphinx (>=1.2.2)", "eventlet (>=0.17.1)", "flake8", "gevent (>=1.2)", "mypy (>=0.991)", "pure-sasl (>=0.5.1)", "sphinx-autodoc-typehints (>=1)"]
+dev = ["flake8"]
+docs = ["Sphinx (>=1.2.2)", "sphinx-autodoc-typehints (>=1)"]
+eventlet = ["eventlet (>=0.17.1)"]
+gevent = ["gevent (>=1.2)"]
+sasl = ["pure-sasl (>=0.5.1)"]
+test = ["eventlet (>=0.17.1)", "gevent (>=1.2)", "objgraph", "pyjks", "pyopenssl", "pytest", "pytest-cov"]
+typing = ["mypy (>=0.991)"]
+
+[[package]]
 name = "loguru"
 version = "0.7.2"
 description = "Python logging made (stupidly) simple"
@@ -299,4 +320,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "919f1fa47f5e7c2366ba17f6f91f067e082379e689c1bb43056c508ef145b291"
+content-hash = "6ce44d1e8ce7bd97f60fe108b122744eaf13a38a5ffa5730cb640eaa4e0d01d5"
