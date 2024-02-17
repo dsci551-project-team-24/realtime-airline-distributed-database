@@ -2,18 +2,31 @@
 version: '3.1'
 name: realtime-airline-distributed-database
 services:
-  test_container:
-    image: ubuntu:20.04
-    command: tail -f /dev/null
+  zookeeper:
+    image: zookeeper
+    restart: always
+  # Uncomment the following lines to expose zookeeper on localhost
+  #    ports:
+  #      - "2181:2181"
   db:
     image: custom_mysql
     restart: always
     environment:
       MYSQL_PASSWORD: dsci551
-      # Localhost configuration for now
-      ZOOKEEPER_SERVERS: "host.docker.internal"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      ZOOKEEPER_SERVERS: "zookeeper"
     deploy:
       mode: replicated
       replicas: 3
+    depends_on:
+      - zookeeper
+  data_router:
+    image: data_router
+    restart: always
+    depends_on:
+      - db
+      - zookeeper
+    environment:
+      ZOOKEEPER_SERVERS: "zookeeper"
+    ports:
+      # the app exposes port 8000 on the container and we map it to 8090 on the host
+      - "8090:8000"
