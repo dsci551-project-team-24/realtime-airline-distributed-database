@@ -31,6 +31,8 @@ services:
       - zookeeper
     environment:
       ZOOKEEPER_SERVERS: "zookeeper"
+      MYSQL_USER: root
+      MYSQL_PASSWORD: dsci551
     ports:
       # the app exposes port 8000 on the container and we map it to 8090 on the host
       - "8090:8000"
