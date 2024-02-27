@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import traceback
 
 from kazoo.client import KazooClient
@@ -49,5 +50,7 @@ except:
     error_msg = traceback.format_exc()
     logger.error(f'Error while creating ephemeral node: {error_msg}')
     sys.exit(1)
+# keep the script running to keep the ephemeral node alive with least amount of cpu usage
 while True:
     pass
+    time.sleep(5)
