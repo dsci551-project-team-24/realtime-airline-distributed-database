@@ -3,17 +3,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from loguru import logger
 
-from .dependencies import init_clients, init_modules, shutdown_clients, setup_watchers
+from .dependencies import init_clients, init_modules, shutdown_clients, setup_watchers, destroy_modules
 from ..routes import main_router
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     init_clients()
     init_modules()
     logger.info("App started.")
     yield
     logger.info("App shutting down.")
+    destroy_modules()
     shutdown_clients()
 
 

@@ -11,6 +11,9 @@ class HostManager:
         self.zk.ensure_path("/hosts")
         logger.info("HostManager initialized.")
 
+    def get_client(self) -> KazooClient:
+        return self.zk
+
     def get_hosts(self) -> List[str]:
         """
         Returns all hosts in the /hosts znode.
