@@ -42,25 +42,3 @@ class QueryExecutor:
         else:
             print("No available hosts.")
 
-# # Initialize ZooKeeper client
-# zk = KazooClient(hosts='127.0.0.1:2181')
-# zk.start()
-#
-# # Initialize HostManager with ZooKeeper client
-# host_manager = HostManager(zk)
-#
-# # Initialize DatabaseNodeManager with HostManager
-# database_node_manager = DatabaseNodeManager(host_manager)
-#
-# # Initialize QueryExecutor with HostManager and DatabaseNodeManager
-# query_executor = QueryExecutor(host_manager, database_node_manager)
-#
-# # Example queries
-# queries = [
-#     "CREATE DATABASE IF NOT EXISTS test_db;",
-#     "CREATE TABLE IF NOT EXISTS test_table (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));"
-# ]
-#
-# # Execute queries
-# for query in queries:
-#     query_executor.execute_query(query
