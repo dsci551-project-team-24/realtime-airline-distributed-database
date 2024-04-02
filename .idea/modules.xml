@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DM_Project.iml" filepath="$PROJECT_DIR$/.idea/DM_Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../TEST2/realtime-airline-distributed-database/.idea/realtime-airline-distributed-database.iml" filepath="$PROJECT_DIR$/../TEST2/realtime-airline-distributed-database/.idea/realtime-airline-distributed-database.iml" />
     </modules>
   </component>
 </project>

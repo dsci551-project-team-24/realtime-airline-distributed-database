@@ -4,6 +4,7 @@ from src.backend.data_router.modules.db.db_node_manager import DatabaseNodeManag
 from src.backend.data_router.clients.mysql_client import MySqlClient
 from src.backend.data_router.modules.hashing.consistent_hashing import ConsistentHashing
 
+
 class QueryExecutor:
     def __init__(self, host_manager: HostManager, db_manager: DatabaseNodeManager):
         self.host_manager = host_manager
@@ -42,25 +43,60 @@ class QueryExecutor:
         else:
             print("No available hosts.")
 
-# # Initialize ZooKeeper client
-# zk = KazooClient(hosts='127.0.0.1:2181')
-# zk.start()
-#
-# # Initialize HostManager with ZooKeeper client
-# host_manager = HostManager(zk)
-#
-# # Initialize DatabaseNodeManager with HostManager
-# database_node_manager = DatabaseNodeManager(host_manager)
-#
-# # Initialize QueryExecutor with HostManager and DatabaseNodeManager
-# query_executor = QueryExecutor(host_manager, database_node_manager)
-#
-# # Example queries
-# queries = [
-#     "CREATE DATABASE IF NOT EXISTS test_db;",
-#     "CREATE TABLE IF NOT EXISTS test_table (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255));"
-# ]
-#
-# # Execute queries
-# for query in queries:
-#     query_executor.execute_query(query
+    def insert_data(self, table_name: str, query: str):
+        host = self.hasher.get_server(table_name)
+        client = self.db_manager.get_client_for_host(host)
+        if client:
+            client.execute_dml_query(query)
+            print(f"Data inserted successfully into table '{table_name}' on host {host}.")
+        else:
+            print("No available hosts.")
+
+    def select_data(self, table_name: str, query: str):
+        host = self.hasher.get_server(table_name)
+        client = self.db_manager.get_client_for_host(host)
+        if client:
+            data = client.execute_select_query(query)
+            print(f"Data selected successfully from table '{table_name}' on host {host}.")
+            return data
+        else:
+            print("No available hosts.")
+            return []
+
+    def delete_data(self, table_name: str, query: str):
+        host = self.hasher.get_server(table_name)
+        client = self.db_manager.get_client_for_host(host)
+        if client:
+            client.execute_dml_query(query)
+            print(f"Data deleted successfully from table '{table_name}' on host {host}.")
+        else:
+            print("No available hosts.")
+
+    def update_data(self, table_name: str, query: str):
+        host = self.hasher.get_server(table_name)
+        client = self.db_manager.get_client_for_host(host)
+        if client:
+            client.execute_dml_query(query)
+            print(f"Data updated successfully in table '{table_name}' on host {host}.")
+        else:
+            print("No available hosts.")
+
+    def drop_table(self, table_name: str):
+        host = self.hasher.get_server(table_name)
+        client = self.db_manager.get_client_for_host(host)
+        if client:
+            query = f"DROP TABLE {table_name};"
+            client.execute_ddl_query(query)
+            print(f"Table '{table_name}' dropped successfully on host {host}.")
+        else:
+            print("No available hosts.")
+
+    def drop_database(self, database_name: str):
+        host = self.hasher.get_server(database_name)
+        client = self.db_manager.get_client_for_host(host)
+        if client:
+            query = f"DROP DATABASE {database_name};"
+            client.execute_ddl_query(query)
+            print(f"Database '{database_name}' dropped successfully on host {host}.")
+        else:
+            print("No available hosts.")
