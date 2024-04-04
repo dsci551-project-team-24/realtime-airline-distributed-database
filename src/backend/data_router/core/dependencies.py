@@ -4,13 +4,15 @@ import sys
 from kazoo.client import KazooClient
 from loguru import logger
 
-from data_router.modules.db.db_node_manager import DatabaseNodeManager
-from data_router.modules.host_management.host_manager import HostManager
+from src.backend.data_router.modules.db.db_node_manager import DatabaseNodeManager
+from src.backend.data_router.modules.db.query_executor import QueryExecutor
+from src.backend.data_router.modules.host_management.host_manager import HostManager
 
 
 class Modules:
     host_manager: HostManager = None
     db_node_orchestrator: DatabaseNodeManager = None
+    query_executor: QueryExecutor = None
 
 
 class Clients:
@@ -47,6 +49,7 @@ def shutdown_clients():
 def init_modules():
     Modules.host_manager = HostManager(Clients.zookeeper_client)
     Modules.db_node_orchestrator = DatabaseNodeManager(Modules.host_manager)
+    Modules.query_executor = QueryExecutor(Modules.host_manager, Modules.db_node_orchestrator)
 
 
 def destroy_modules():
