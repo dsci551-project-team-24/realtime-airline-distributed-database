@@ -1,10 +1,8 @@
-from typing import List
-
 from kazoo.client import KazooClient
-from src.backend.data_router.modules.host_management.host_manager import HostManager
-from src.backend.data_router.modules.db.db_node_manager import DatabaseNodeManager
-from src.backend.data_router.clients.mysql_client import MySqlClient
-from src.backend.data_router.modules.hashing.consistent_hashing import ConsistentHashing
+
+from data_router.modules.db.db_node_manager import DatabaseNodeManager
+from data_router.modules.hashing.consistent_hashing import ConsistentHashing
+from data_router.modules.host_management.host_manager import HostManager
 
 
 class QueryExecutor:
