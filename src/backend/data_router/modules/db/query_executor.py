@@ -53,7 +53,6 @@ class QueryExecutor:
             query = f"CREATE DATABASE IF NOT EXISTS {database_name};"
             client.execute_ddl_query(query)
             print(f"Database '{database_name}' created successfully on host {host}.")
-            # Create znode for the partition
             self.zk.ensure_path(f"/tables/{database_name}")
         else:
             print("No available hosts.")
@@ -65,7 +64,6 @@ class QueryExecutor:
             client.execute_ddl_query(query)
             print(f"Table '{table_name}' created successfully on host {host}.")
 
-            # Get the number of partitions from the query or set a default value
             partition_number = self.extract_partition_number(query)
             if partition_number:
                 for i in range(partition_number):
