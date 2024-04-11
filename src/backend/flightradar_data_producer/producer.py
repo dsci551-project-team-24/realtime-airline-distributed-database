@@ -8,23 +8,27 @@ from loguru import logger
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+time_to_sleep = int(os.environ.get('TIME_TO_SLEEP', 30))
+
 
 def get_detailed_flight_information(driver, flight_id):
     try:
         driver.get(f"https://data-live.flightradar24.com/clickhandler/?flight={flight_id}")
     except Exception as e:
+        producer.flush()
         logger.error(f"Failed to get detailed flight information for flight_id={flight_id}: {e}")
         # wait for some time as the server might be throttling us
-        logger.info("Sleeping for 5 seconds, then retrying to get data from flightradar24")
-        time.sleep(5)
+        logger.info(f"Sleeping for {time_to_sleep} seconds, then retrying to get data from flightradar24")
+        time.sleep(time_to_sleep)
         return None
     try:
         data = driver.find_element(By.XPATH, "/html/body/pre").text
     except Exception as e:
+        producer.flush()
         logger.error(f"Failed to get detailed flight information for flight_id={flight_id}: {e}")
         # wait for some time as the server might be throttling us
-        logger.info("Sleeping for 5 seconds, then retrying to get data from flightradar24")
-        time.sleep(5)
+        logger.info(f"Sleeping for {time_to_sleep} seconds, then retrying to get data from flightradar24")
+        time.sleep(time_to_sleep)
         return None
     return json.loads(data)
 
@@ -72,7 +76,6 @@ def convert_to_json(flight):
 
 if __name__ == '__main__':
     logger.info("Starting the producer")
-    time_to_sleep = os.environ.get('TIME_TO_SLEEP', 30)
     kafka_config = os.environ.get('KAFKA_CONFIG', '{"bootstrap.servers": "localhost:9092"}')
     kafka_config = json.loads(kafka_config)
     logger.info(f"Connecting to Kafka: {kafka_config}")
@@ -95,8 +98,8 @@ if __name__ == '__main__':
         except Exception as e:
             logger.error(f"Failed to get data from flightradar24: {e}")
             # wait for some time as the server might be throttling us
-            logger.info("Sleeping for 5 seconds, then retrying to get data from flightradar24")
-            time.sleep(10)
+            logger.info(f"Sleeping for {time_to_sleep} seconds, then retrying to get data from flightradar24")
+            time.sleep(time_to_sleep)
             continue
         # use xpath to get the data
         try:
@@ -104,8 +107,9 @@ if __name__ == '__main__':
         except Exception as e:
             logger.error(f"Failed to get data from flightradar24: {e}")
             # wait for some time as the server might be throttling us
-            logger.info("Sleeping for 5 seconds, then retrying to get data from flightradar24")
-            time.sleep(5)
+            producer.flush()
+            logger.info(f"Sleeping for {time_to_sleep} seconds, then retrying to get data from flightradar24")
+            time.sleep(time_to_sleep)
             continue
         parsed_data = json.loads(data)
         print(f"Found {len(parsed_data)} flights")

@@ -3,6 +3,8 @@ import signal
 from typing import Dict, Union
 
 from loguru import logger
+from pyspark.sql import SparkSession
+from pyspark.sql.dataframe import DataFrame
 
 from data_router.clients.mysql_client import MySqlClient
 from data_router.modules.host_management.host_manager import HostManager
@@ -13,12 +15,16 @@ class DatabaseNodeManager:
     mysql_user: str
     mysql_password: str
     clients: Dict[str, MySqlClient]
+    spark_session: SparkSession
+    spark_dfs: Dict[str, Dict[str, DataFrame]]
 
-    def __init__(self, host_manager: HostManager):
+    def __init__(self, host_manager: HostManager, spark_session: SparkSession):
         self.host_manager = host_manager
         self.clients = {}
         self.__creds_check_and_set()
+        self.spark_session = spark_session
         self.watcher = host_manager.get_client().ChildrenWatch("/hosts", self.__watcher_callback)
+        self.spark_dfs = {}
 
     def __watcher_callback(self, children):
         logger.info(f"Children of /hosts updated to: {children}")
@@ -57,6 +63,21 @@ class DatabaseNodeManager:
             return None
         return self.clients[host]
 
+    def get_dataframe_for_host_and_table(self, host: str, table: str) -> DataFrame:
+        if host not in self.spark_dfs:
+            logger.info(f"Creating new entry for host {host} in spark_dfs cache.")
+            self.spark_dfs[host] = {}
+        if table not in self.spark_dfs[host]:
+            logger.info(f"Creating new entry for table {table} in host {host} in spark_dfs cache.")
+            df = self.spark_session \
+                .read \
+                .format("jdbc") \
+                .option("url", f"jdbc:mysql://{host}/{table}") \
+                .option("driver", "com.mysql.jdbc.Driver").option("dbtable", table) \
+                .option("user", self.mysql_user).option("password", self.mysql_password).load()
+            self.spark_dfs[host][table] = df
+        return self.spark_dfs[host][table]
+
     def add_node(self, host: str, username: str, password: str) -> bool:
         if host in self.clients:
             logger.error(f"Node {host} already exists")
@@ -70,11 +91,11 @@ class DatabaseNodeManager:
             logger.error(f"Node {host} does not exist")
             return False
         client = self.clients[host]
-        client.close_connection()
+        client.close_connections()
         del self.clients[host]
         return True
 
     def close_connections(self) -> None:
         for client in self.clients.values():
-            client.close_connection()
+            client.close_connections()
         self.clients = {}
