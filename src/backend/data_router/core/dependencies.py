@@ -12,7 +12,6 @@ from data_router.modules.db.query_executor import QueryExecutor
 from data_router.modules.host_management.host_manager import HostManager
 
 
-
 class Modules:
     host_manager: HostManager = None
     db_node_orchestrator: DatabaseNodeManager = None

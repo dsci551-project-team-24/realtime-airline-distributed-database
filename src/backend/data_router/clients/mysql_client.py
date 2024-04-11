@@ -97,7 +97,9 @@ class MySqlClient:
         try:
             cursor.execute(query)
             result = cursor.fetchall()
-            return result
+            description = cursor.description
+            # formulate list of dictionaries, where the keys are the column names
+            return [{description[i][0]: row[i] for i in range(len(row))} for row in result]
         except Error as e:
             logger.error(f"Failed to execute DML query on {self.host} with error: {e}")
             raise e
