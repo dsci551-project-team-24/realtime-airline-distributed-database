@@ -3,26 +3,23 @@
    if(elem.value == "1" | elem.value == "2") {
       document.getElementById('file_input').style.display = "none";
       document.getElementById('arg1').style.display = "block";
-      document.getElementById('arg1_input_field').placeholder= "filepath";
+      document.getElementById('arg1_input_field').placeholder= "Country";
       document.getElementById('arg2').style.display = "none";
       document.getElementById('submit_button').style.display = "block";
-
     } else if (elem.value == "3" | elem.value == "4")  {
       document.getElementById('file_input').style.display = "none";
       document.getElementById('arg1').style.display = "block";
-      document.getElementById('arg1_input_field').placeholder= "filename";
+      document.getElementById('arg1_input_field').placeholder= "Airport Code";
       document.getElementById('arg2').style.display = "none";
       document.getElementById('submit_button').style.display = "block";
-    }
-    else if (elem.value == "5") {
-      document.getElementById('file_input').style.display = "block";
-      document.getElementById('arg1').style.display = "block";
+    } else if (elem.value == "5" | elem.value == "6") {
+      document.getElementById('file_input').style.display = "none";
+      document.getElementById('arg1').style.display = "none";
       document.getElementById('arg1_input_field').placeholder= "location";
-      document.getElementById('arg2').style.display = "block";
+      document.getElementById('arg2').style.display = "none";
       document.getElementById('arg2_input_field').placeholder= "k";
       document.getElementById('submit_button').style.display = "block";
-    }
-    else {
+    } else {
       document.getElementById('file_input').style.display = "none";
       document.getElementById('arg1').style.display = "none";
       document.getElementById('arg2').style.display = "none";
@@ -39,17 +36,18 @@
     </svg>
   </a>
   <div class="row mt-3 ml-3">
-    <p class="text-white">$ edfs</p>
+    <p class="text-white">Commands</p>
   </div>
   <form class="form-inline" method="POST" name="edfs_command", enctype="multipart/form-data">
       <div class="form-group ml-4">
         <select class="form-control" aria-label="command select" id="command" name="command" onchange="displayForm(this)">
-          <option selected>Command</option>
-          <option value="1">mkdir</option>
-          <option value="2">ls</option>
-          <option value="3">rm</option>
-          <option value="4">cat</option>
-          <option value="5">put</option>
+          <option selected>Select</option>
+          <option value="1">Flights By Origin Country</option>
+          <option value="2">Flights By Destination Country</option>
+          <option value="3">Flights By Origin Airport</option>
+          <option value="4">Flights By Destination Airport</option>
+          <option value="5">Flights In Northern Hemisphere</option>
+          <option value="6">Flights In Southern Hemisphere</option>
         </select>
     </div>
         <div class="form-group ml-2" id="file_input" style="display: none">
