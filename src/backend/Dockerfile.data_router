@@ -1,4 +1,13 @@
-FROM python:3.11-slim
+FROM python:3.11
+# Install wget
+RUN apt-get update && apt-get install -y wget
+RUN apt install default-jre --fix-missing -y
+# wget deb file
+RUN wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j_8.3.0-1ubuntu22.04_all.deb
+# Install deb file
+RUN dpkg -i mysql-connector-j_8.3.0-1ubuntu22.04_all.deb
+#Set JAVA_HOME
+ENV JAVA_HOME /usr/lib/jvm/java-1.17.0-openjdk-arm64
 COPY pyproject.toml poetry.lock /app/
 WORKDIR /app
 RUN pip install poetry

@@ -35,30 +35,16 @@ def database_html():
             if cmd.error:
                 flash(cmd.error, 'danger')
             else:
-                flash(f"Executing $edfs {cmd.command} {cmd.file_input} {cmd.arg1} {cmd.arg2}", 'primary')
-                response = run_command(cmd, 'mysql')
-                if cmd.command == "cat":
-                    cat_out = response.output
-                    print(cat_out, '\n CAT OUT-------------')
-                    if response.status == "danger":
-                        flash(response.output, response.status)
-                    else:
-                        flash(f"Succesfully retreived contents of {cmd.arg1}", response.status)
-                        # Handle CAT Output Here
-                    print('trying to render')
-                    return render_template("database.html", data=html, cat_out=cat_out, analysis_out=analysis_out)
-                    
-                else:
-                    flash(response.output, response.status)
+                flash(f"Executing {cmd.command} {cmd.arg1}", 'primary')
+                analysis_out = run_analyses(cmd)
 
-            return redirect(url_for('database_html'))
+            #return redirect(url_for('database_html'))
         
         elif data.get('analyses'):
             analysis_out = run_analyses(data.get('analyses'))
         else:
             pass
     return render_template("database.html", data=html, cat_out=cat_out, analysis_out=analysis_out)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
