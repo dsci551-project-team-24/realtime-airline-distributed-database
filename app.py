@@ -44,7 +44,8 @@ def database_html():
             analysis_out = run_analyses(data.get('analyses'))
         else:
             pass
-    return render_template("database.html", data=html, cat_out=cat_out, analysis_out=analysis_out)
+        print(analysis_out)
+    return render_template("database.html", data=html, cat_output=cat_out, analyses_output=analysis_out)
 
 if __name__ == "__main__":
     app.run(debug=True)

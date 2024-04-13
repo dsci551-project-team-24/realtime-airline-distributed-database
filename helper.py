@@ -1,6 +1,9 @@
 from typing import Any
 from collections import namedtuple
 from app import UPLOAD_FOLDER
+import requests
+from flask import Flask, render_template
+
 
 def validate_input(form_response: dict, file_obj) -> tuple:
     """Validates input from form
@@ -45,30 +48,30 @@ def run_analyses(command: tuple) -> str:
         country = command.arg1
         query = "SELECT _ from _"
         desc = "Finds all Delta flights with the origin country: {}".format(country)
-        result = None
+        result = requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
     elif command.command == "2":
         country = command.arg1
-        query = "SELECT _ from _"
+        query = f"SELECT DISTINCT callsign, origin_airport_name, destination_airport_name FROM flight_data WHERE destination_airport_country_name  = '{command.arg1}' limit 10"
         desc = "Finds all Delta flights with the destination country: {}".format(country)
-        result = None
+        result = requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
     elif command.command == "3":
         airport = command.arg1
-        query = "SELECT _ from _"
+        query = f"SELECT DISTINCT callsign, origin_airport_name, destination_airport_name from flight_data where origin_airport_iata = '{command.arg1}' limit 10"
         desc = "Finds all Delta flights with the origin airport code: {}".format(airport)
-        result = None
+        result =  requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
     elif command.command == "4":
         airport = command.arg1
-        query = "SELECT _ from _"
+        query = f"SELECT DISTINCT callsign, origin_airport_name, destination_airport_name from flight_data where destination_airport_iata = '{command.arg1}' limit 10"
         desc = "Finds all Delta flights with the destination airport code: {}".format(airport)
-        result = None
+        result =  requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
     elif command.command == "5":
-        query = "SELECT _ from _"
+        query = f"SELECT DISTINCT callsign, origin_airport_name, destination_airport_name from flight_data where latitude > 0 limit 10"
         desc = "Finds all Delta flights within the Northern hemisphere"
-        result = None
+        result = requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
     elif command.command == "6":
-        query = "SELECT _ from _"
+        query = f"SELECT DISTINCT callsign, origin_airport_name, destination_airport_name from flight_data where latitude < 0 limit 10"
         desc = "Finds all Delta flights within the Southern hemisphere"
-        result = None
+        result = requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
     return format_analyses_output(result, query, desc)
         
 
