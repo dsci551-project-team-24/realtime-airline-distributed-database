@@ -32,10 +32,19 @@ def database_html():
             if cmd.error:
                 flash(cmd.error, 'danger')
             else:
-                flash(f"Executing {cmd.command} {cmd.arg1}", 'primary')
+                flash(f"{cmd.operation}", 'primary')
                 analysis_out = run_analyses(cmd)
         print(analysis_out)
     return render_template("database.html", data=html, cat_output=cat_out, analyses_output=analysis_out)
+
+@app.route('/route/<callsign>')
+def get_flight_details(callsign):
+    # Construct the query based on callsign
+    print("HERE")
+    query = f"SELECT * FROM flight_data WHERE callsign = '{callsign}'"
+    response = requests.post("http://127.0.0.1:8090/database/query", json={"partitionKey":callsign, "tableName": "flight_data", "query": query})
+    flight_details = response.json()
+    return render_template('flight_details.html', flight_details=flight_details)
 
 if __name__ == "__main__":
     app.run(debug=True)
