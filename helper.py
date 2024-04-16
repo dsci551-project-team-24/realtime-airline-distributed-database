@@ -72,6 +72,7 @@ def run_analyses(command: tuple) -> str:
         query = f"SELECT DISTINCT callsign, origin_airport_name, destination_airport_name from flight_data where latitude < 0 limit 10"
         desc = "Finds all Delta flights within the Southern hemisphere"
         result = requests.post("http://127.0.0.1:8090/database/scan", json={"tableName": "flight_data", "selectQuery": query}).json()
+    print(result)
     return format_analyses_output(result, query, desc)
         
 
