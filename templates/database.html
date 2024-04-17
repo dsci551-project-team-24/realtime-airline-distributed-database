@@ -7,18 +7,36 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+    .styled-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    a {
+    color: #0a53be;
+    }
 
+    .styled-table th, .styled-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .styled-table th {
+        background-color: #6f6d7e;
+    }
+    </style>
   </head>
-  <body>
+  <body class="bg-secondary">
     {% include 'top_nav.html' %}
-    <section class="section-header overflow-hidden pt-7 pt-lg-8 pb-9 pb-lg-12 bg-secondary text-white">
+    <section class="section-header overflow-hidden pt-7 pt-lg-8 pb-9 pb-lg-12 bg-secondary-subtle text-white">
       <div class="container">
         {% include 'flashes.html'%}
       </div>
       <div>{{cat_output|safe}}</div>
-        <div style="display: block; width: 100%">
-          <div style="width:50%; float: left; display: inline-block">{{analyses_output|safe}}</div>
-        </div>
+      <div class="text-center">
+        <div style="width:50%; display: inline-block;">{{analyses_output|safe}}</div>
+      </div>
     </section>
     <!-- % include 'analyses.html' %} -->
     <!-- Optional JavaScript -->
