@@ -2,20 +2,24 @@ from typing import Dict, Any, List
 
 from loguru import logger
 from pyspark.sql import SparkSession
+from uhashring import HashRing
 
 from data_router.modules.db.db_node_manager import DatabaseNodeManager
 from data_router.modules.host_management.host_manager import HostManager
 
 
 class QueryExecutor:
-    def __init__(self, host_manager: HostManager, db_manager: DatabaseNodeManager, spark_session: SparkSession):
+    def __init__(self, host_manager: HostManager, db_manager: DatabaseNodeManager, spark_session: SparkSession,
+                 hash_ring: HashRing):
         self.host_manager = host_manager
         self.db_manager = db_manager
         self.zk = self.host_manager.get_client()
         self.spark_session = spark_session
+        self.hash_ring = hash_ring
 
     def create_table(self, table_name: str, query: str, partition_key: str):
-        hosts = self.host_manager.get_hosts()
+        hosts = list(self.hash_ring.get_nodes())
+        print(f"Hosts: {hosts}")
         # First create the database in each host
         for host in hosts:
             client = self.db_manager.get_client_for_host(host)

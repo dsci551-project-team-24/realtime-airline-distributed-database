@@ -5,6 +5,7 @@ import sys
 from kazoo.client import KazooClient
 from loguru import logger
 from pyspark.sql import SparkSession
+from uhashring import HashRing
 
 from data_router.consumers.ingestion_consumer import IngestionConsumer
 from data_router.modules.db.db_node_manager import DatabaseNodeManager
@@ -72,10 +73,11 @@ def shutdown_clients():
 
 
 def init_modules():
+    hash_ring = HashRing(hash_fn='ketama')
     Modules.host_manager = HostManager(Clients.zookeeper_client)
-    Modules.db_node_orchestrator = DatabaseNodeManager(Modules.host_manager, Clients.spark_session)
+    Modules.db_node_orchestrator = DatabaseNodeManager(Modules.host_manager, Clients.spark_session, hash_ring)
     Modules.query_executor = QueryExecutor(host_manager=Modules.host_manager, db_manager=Modules.db_node_orchestrator,
-                                           spark_session=Clients.spark_session)
+                                           spark_session=Clients.spark_session, hash_ring=hash_ring)
 
 
 def init_consumers():

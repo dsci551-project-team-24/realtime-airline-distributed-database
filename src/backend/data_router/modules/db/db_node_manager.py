@@ -5,6 +5,7 @@ from typing import Dict, Union
 from loguru import logger
 from pyspark.sql import SparkSession
 from pyspark.sql.dataframe import DataFrame
+from uhashring import HashRing
 
 from data_router.clients.mysql_client import MySqlClient
 from data_router.modules.host_management.host_manager import HostManager
@@ -17,14 +18,17 @@ class DatabaseNodeManager:
     clients: Dict[str, MySqlClient]
     spark_session: SparkSession
     spark_dfs: Dict[str, Dict[str, DataFrame]]
+    hash_ring: HashRing
 
-    def __init__(self, host_manager: HostManager, spark_session: SparkSession):
+    def __init__(self, host_manager: HostManager, spark_session: SparkSession, hash_ring: HashRing):
+        self.hash_ring = hash_ring
         self.host_manager = host_manager
         self.clients = {}
         self.__creds_check_and_set()
         self.spark_session = spark_session
         self.watcher = host_manager.get_client().ChildrenWatch("/hosts", self.__watcher_callback)
         self.spark_dfs = {}
+        logger.info("DatabaseNodeManager initialized.")
 
     def __watcher_callback(self, children):
         logger.info(f"Children of /hosts updated to: {children}")
@@ -84,6 +88,9 @@ class DatabaseNodeManager:
             return False
         client = MySqlClient(host, username, password)
         self.clients[host] = client
+        # Add the node to the hash ring
+        logger.info(f"Adding node {host} to the hash ring")
+        self.hash_ring.add_node(host)
         return True
 
     def remove_node(self, host: str) -> bool:
@@ -93,6 +100,9 @@ class DatabaseNodeManager:
         client = self.clients[host]
         client.close_connections()
         del self.clients[host]
+        # Remove the node from the hash ring
+        logger.info(f"Removing node {host} from the hash ring")
+        self.hash_ring.remove_node(host)
         return True
 
     def close_connections(self) -> None:

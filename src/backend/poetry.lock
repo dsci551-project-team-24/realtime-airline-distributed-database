@@ -1121,6 +1121,17 @@ files = [
 ]
 
 [[package]]
+name = "uhashring"
+version = "2.3"
+description = "Full featured consistent hashing python library compatible with ketama."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "uhashring-2.3-py3-none-any.whl", hash = "sha256:7ee8a25ca495a97effad10bd563c83b4054a6d7606d9530757049a04edab9297"},
+    {file = "uhashring-2.3.tar.gz", hash = "sha256:9f76187e8d8e82f6e5519c995eef1f1bf44d4a5e0fc4fdd1219a044b10040612"},
+]
+
+[[package]]
 name = "urllib3"
 version = "2.2.1"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -1189,4 +1200,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "0d48181db6caabb36de28006a2f7966b9673c403c2ee9eaa003ecdd120c2c7bf"
+content-hash = "662097ebcf5f8f25be4e6019b446558ca13dd044c948553174e34b0256f58c88"

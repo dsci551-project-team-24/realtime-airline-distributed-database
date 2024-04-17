@@ -20,7 +20,7 @@ class IngestionConsumer:
         self.ingestion_topic = os.environ.get("INGESTION_TOPIC")
 
     async def consume(self):
-        consumer = AIOKafkaConsumer("realtime-flightradar24-data", bootstrap_servers="kafka")
+        consumer = AIOKafkaConsumer("realtime-flightradar24-data", bootstrap_servers=self.kafka_bootstrap_servers)
         # keep trying to connect to kafka until it is successful
         while True:
             try:
